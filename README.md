@@ -87,7 +87,7 @@ flowchart LR
     FB[Sample rainfall] --> WS
     WS --> RE[Risk engine]
     RE --> API[FastAPI]
-    API --> DB[(SQLite)]
+    API --> DB[(SQLite locally / Postgres in production)]
     API --> DASH[React dashboard]
     API --> CAPP[React citizen app]
 ```
@@ -132,6 +132,7 @@ Full table: [`DATA.md`](DATA.md). In short: village, gauge, shelter and rainfall
 - Sample village data is approximate; gauge readings are simulated, not live sensor feeds.
 - SMS sending is simulated (an in-database outbox) — no real SMS gateway is wired up.
 - The admin token is a demo stand-in for real authentication.
+- Uploaded incident photos are written to local disk (`UPLOAD_DIR`); on the serverless deployment this storage is ephemeral even though the database is now persistent — a real deployment should move uploads to object storage (e.g. Vercel Blob).
 - Hindi and Nepali text awaits native-speaker review (see `frontend/src/i18n/strings.ts`).
 - This is a hackathon prototype, not a replacement for official warnings from SSDMA, IMD or CWC.
 

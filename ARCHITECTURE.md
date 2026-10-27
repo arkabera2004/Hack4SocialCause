@@ -11,7 +11,7 @@ flowchart LR
     RE --> API[FastAPI REST API]
     ALERTS[Alert service + outbox] --> API
     CITIZEN[Citizen service\ncheck-ins, incidents] --> API
-    API --> DB[(SQLite)]
+    API --> DB[(SQLite locally / Postgres in production)]
     API --> DASH[Authority dashboard\nReact /]
     API --> CAPP[Citizen app\nReact /citizen]
 ```
@@ -71,14 +71,14 @@ sequenceDiagram
 
 - **Pure-function risk engine.** `risk_engine.py` takes plain data in and returns a score, level and reasons — no DB or HTTP inside. This makes it trivially unit-testable and lets the README show the exact formula without hand-waving.
 - **Offline fallback everywhere.** Weather falls back to bundled sample data on any network failure or `WEATHER_MODE=offline`. The demo never breaks because of a flaky connection or jury wifi.
-- **SQLite.** Zero setup for a fresh clone; swappable to Postgres later by changing `DATABASE_URL` alone, since all access goes through SQLAlchemy.
+- **SQLite for local dev, Postgres (Neon) in production.** Zero setup for a fresh clone; the deployed backend points `DATABASE_URL` at a managed Postgres instance so demo state (alerts, check-ins, incidents, gauge levels) survives across serverless invocations — all access goes through SQLAlchemy, so no application code changed, just the connection string.
 - **Polling, not websockets.** Simpler to build, test and reason about, and works on the poor mobile networks disaster responders actually have.
 - **Reasons rendered in three languages from the backend.** One source of truth for "why this score" and alert text, so the dashboard (English) and citizen app (EN/HI/NE) never drift apart.
 - **No login system.** The jury's priorities rank "runs first time from a fresh clone" and "demo never breaks" above anything else; an admin-token header is enough to gate write actions in a prototype.
 
 ## Scaling path
 
-- Move from SQLite to PostgreSQL + PostGIS for proper spatial queries at scale.
+- Add PostGIS to the production Postgres instance for proper spatial queries at scale.
 - Replace simulated gauges and lake levels with real state sensor feeds.
 - Replace the simulated outbox with a real SMS gateway and CAP-format alerts.
 - Add new river basins/states as new sample-data files, not new code.
