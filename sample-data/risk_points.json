@@ -1,0 +1,13 @@
+{
+  "note": "Approximate sample data for a hackathon prototype. Verify before real use. Gauge readings are simulated (no public live feed is used).",
+  "items": [
+    {"id": "south-lhonak", "name": "South Lhonak Lake", "kind": "glacial_lake", "lat": 27.912, "lng": 88.198, "river_km": 0, "hazard": 0.9, "normal_level_m": null, "danger_level_m": null, "current_level_m": null},
+    {"id": "gauge-chungthang", "name": "Chungthang gauge", "kind": "river_gauge", "lat": 27.600, "lng": 88.643, "river_km": 65, "hazard": null, "normal_level_m": 2.0, "danger_level_m": 6.0, "current_level_m": 2.0},
+    {"id": "gauge-dikchu", "name": "Dikchu gauge", "kind": "river_gauge", "lat": 27.398, "lng": 88.518, "river_km": 110, "hazard": null, "normal_level_m": 2.5, "danger_level_m": 7.0, "current_level_m": 2.5},
+    {"id": "gauge-singtam", "name": "Singtam gauge", "kind": "river_gauge", "lat": 27.232, "lng": 88.495, "river_km": 135, "hazard": null, "normal_level_m": 3.0, "danger_level_m": 8.0, "current_level_m": 3.0},
+    {"id": "gauge-rangpo", "name": "Rangpo gauge", "kind": "river_gauge", "lat": 27.175, "lng": 88.529, "river_km": 150, "hazard": null, "normal_level_m": 3.0, "danger_level_m": 8.5, "current_level_m": 3.0},
+    {"id": "slide-toong-mangan", "name": "Toong–Mangan slide zone", "kind": "landslide_zone", "lat": 27.555, "lng": 88.580, "river_km": null, "hazard": 0.8, "normal_level_m": null, "danger_level_m": null, "current_level_m": null},
+    {"id": "slide-lachung-road", "name": "Lachung road slide zone", "kind": "landslide_zone", "lat": 27.660, "lng": 88.700, "river_km": null, "hazard": 0.7, "normal_level_m": null, "danger_level_m": null, "current_level_m": null},
+    {"id": "slide-nh10-rangpo", "name": "NH10 Rangpo–Singtam zone", "kind": "landslide_zone", "lat": 27.205, "lng": 88.512, "river_km": null, "hazard": 0.7, "normal_level_m": null, "danger_level_m": null, "current_level_m": null}
+  ]
+}

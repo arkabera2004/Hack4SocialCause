@@ -1,0 +1,19 @@
+{
+  "note": "Approximate sample data for a hackathon prototype. Verify before real use.",
+  "items": [
+    {"id": "lachen", "name": "Lachen", "district": "Mangan", "lat": 27.716, "lng": 88.556, "river_km": 35, "slope_class": "high", "population_est": 1500},
+    {"id": "lachung", "name": "Lachung", "district": "Mangan", "lat": 27.690, "lng": 88.745, "river_km": null, "slope_class": "high", "population_est": 2000},
+    {"id": "chungthang", "name": "Chungthang", "district": "Mangan", "lat": 27.603, "lng": 88.646, "river_km": 65, "slope_class": "high", "population_est": 3000},
+    {"id": "toong", "name": "Toong", "district": "Mangan", "lat": 27.575, "lng": 88.605, "river_km": 72, "slope_class": "high", "population_est": 900},
+    {"id": "singhik", "name": "Singhik", "district": "Mangan", "lat": 27.540, "lng": 88.555, "river_km": 78, "slope_class": "high", "population_est": 800},
+    {"id": "mangan", "name": "Mangan", "district": "Mangan", "lat": 27.509, "lng": 88.529, "river_km": 85, "slope_class": "medium", "population_est": 4500},
+    {"id": "dikchu", "name": "Dikchu", "district": "Gangtok", "lat": 27.400, "lng": 88.520, "river_km": 110, "slope_class": "medium", "population_est": 2500},
+    {"id": "singtam", "name": "Singtam", "district": "Gangtok", "lat": 27.234, "lng": 88.497, "river_km": 135, "slope_class": "medium", "population_est": 6000},
+    {"id": "rangpo", "name": "Rangpo", "district": "Pakyong", "lat": 27.177, "lng": 88.531, "river_km": 150, "slope_class": "low", "population_est": 8000},
+    {"id": "melli", "name": "Melli", "district": "Namchi", "lat": 27.093, "lng": 88.452, "river_km": 165, "slope_class": "low", "population_est": 4000},
+    {"id": "teesta-bazar", "name": "Teesta Bazar (WB)", "district": "Kalimpong", "lat": 27.068, "lng": 88.433, "river_km": 175, "slope_class": "low", "population_est": 3000},
+    {"id": "gangtok", "name": "Gangtok", "district": "Gangtok", "lat": 27.330, "lng": 88.612, "river_km": null, "slope_class": "medium", "population_est": 100000},
+    {"id": "pakyong", "name": "Pakyong", "district": "Pakyong", "lat": 27.236, "lng": 88.590, "river_km": null, "slope_class": "medium", "population_est": 4000},
+    {"id": "namchi", "name": "Namchi", "district": "Namchi", "lat": 27.165, "lng": 88.364, "river_km": null, "slope_class": "medium", "population_est": 13000}
+  ]
+}

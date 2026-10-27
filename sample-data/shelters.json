@@ -1,0 +1,173 @@
+{
+  "note": "Approximate sample data for a hackathon prototype. Verify before real use. These are not verified real shelters.",
+  "items": [
+    {
+      "id": "lachen-shelter-1",
+      "name": "Lachen Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.7274,
+      "lng": 88.5684,
+      "capacity": 250
+    },
+    {
+      "id": "lachen-shelter-2",
+      "name": "Lachen Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.7224,
+      "lng": 88.5678,
+      "capacity": 500
+    },
+    {
+      "id": "lachung-shelter-1",
+      "name": "Lachung Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.6953,
+      "lng": 88.7522,
+      "capacity": 800
+    },
+    {
+      "id": "chungthang-shelter-1",
+      "name": "Chungthang Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.61,
+      "lng": 88.6388,
+      "capacity": 100
+    },
+    {
+      "id": "chungthang-shelter-2",
+      "name": "Chungthang Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.6156,
+      "lng": 88.634,
+      "capacity": 300
+    },
+    {
+      "id": "toong-shelter-1",
+      "name": "Toong Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.5816,
+      "lng": 88.599,
+      "capacity": 150
+    },
+    {
+      "id": "singhik-shelter-1",
+      "name": "Singhik Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.5486,
+      "lng": 88.566,
+      "capacity": 600
+    },
+    {
+      "id": "singhik-shelter-2",
+      "name": "Singhik Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.5504,
+      "lng": 88.5492,
+      "capacity": 400
+    },
+    {
+      "id": "mangan-shelter-1",
+      "name": "Mangan Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.5198,
+      "lng": 88.5345,
+      "capacity": 300
+    },
+    {
+      "id": "dikchu-shelter-1",
+      "name": "Dikchu Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.4149,
+      "lng": 88.5063,
+      "capacity": 300
+    },
+    {
+      "id": "dikchu-shelter-2",
+      "name": "Dikchu Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.4095,
+      "lng": 88.5134,
+      "capacity": 250
+    },
+    {
+      "id": "singtam-shelter-1",
+      "name": "Singtam Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.2457,
+      "lng": 88.5081,
+      "capacity": 800
+    },
+    {
+      "id": "rangpo-shelter-1",
+      "name": "Rangpo Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.1893,
+      "lng": 88.5214,
+      "capacity": 800
+    },
+    {
+      "id": "rangpo-shelter-2",
+      "name": "Rangpo Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.1842,
+      "lng": 88.5444,
+      "capacity": 250
+    },
+    {
+      "id": "melli-shelter-1",
+      "name": "Melli Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.1062,
+      "lng": 88.461,
+      "capacity": 250
+    },
+    {
+      "id": "teesta-bazar-shelter-1",
+      "name": "Teesta Bazar (WB) Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.0821,
+      "lng": 88.4259,
+      "capacity": 500
+    },
+    {
+      "id": "teesta-bazar-shelter-2",
+      "name": "Teesta Bazar (WB) Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.0818,
+      "lng": 88.4394,
+      "capacity": 250
+    },
+    {
+      "id": "gangtok-shelter-1",
+      "name": "Gangtok Monastery (sample)",
+      "kind": "monastery",
+      "lat": 27.3424,
+      "lng": 88.5995,
+      "capacity": 500
+    },
+    {
+      "id": "pakyong-shelter-1",
+      "name": "Pakyong Govt. School (sample)",
+      "kind": "school",
+      "lat": 27.2446,
+      "lng": 88.6001,
+      "capacity": 100
+    },
+    {
+      "id": "pakyong-shelter-2",
+      "name": "Pakyong Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.2496,
+      "lng": 88.5787,
+      "capacity": 150
+    },
+    {
+      "id": "namchi-shelter-1",
+      "name": "Namchi Community Hall (sample)",
+      "kind": "community_hall",
+      "lat": 27.1738,
+      "lng": 88.3743,
+      "capacity": 150
+    }
+  ]
+}
