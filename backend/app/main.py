@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.db import Base, SessionLocal, engine
+from app.routers import alerts, risk, villages
 from app.seed import seed_if_empty
 
 VERSION = "0.1.0"
@@ -36,3 +37,20 @@ app.add_middleware(
 upload_dir = Path(settings.upload_dir)
 upload_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
+
+app.include_router(villages.router, prefix="/api")
+app.include_router(risk.router, prefix="/api")
+app.include_router(alerts.router, prefix="/api")
+
+
+@app.get("/api/health", tags=["stats"])
+def health():
+    from app.services import weather as weather_service
+
+    cached = weather_service._cache
+    return {
+        "status": "ok",
+        "weather_source": cached.source if cached else "sample",
+        "weather_fetched_at": cached.fetched_at if cached else None,
+        "version": VERSION,
+    }

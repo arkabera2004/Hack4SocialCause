@@ -1,0 +1,5 @@
+{
+  "en": "TeestaGuard ALERT ({level}) for {village}: {hazard} risk is {level}. Move to higher ground now. Nearest shelter: {shelter} ({distance_km} km). Emergency: 112.",
+  "hi": "TeestaGuard चेतावनी ({level}) – {village}: {hazard} का खतरा {level} है। तुरंत ऊँचे स्थान पर जाएँ। निकटतम आश्रय: {shelter} ({distance_km} किमी)। आपातकालीन नंबर: 112।",
+  "ne": "TeestaGuard चेतावनी ({level}) – {village}: {hazard} को जोखिम {level} छ। तुरुन्तै अग्लो ठाउँमा जानुहोस्। नजिकको आश्रयस्थल: {shelter} ({distance_km} कि.मी.)। आपतकालीन नम्बर: 112।"
+}
