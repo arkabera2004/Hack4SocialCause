@@ -1,0 +1,32 @@
+{
+  "rain_heavy": {
+    "en": "Heavy rain forecast: {rain_72h} mm in the next 72 hours",
+    "hi": "भारी बारिश का पूर्वानुमान: अगले 72 घंटों में {rain_72h} मिमी",
+    "ne": "भारी वर्षाको पूर्वानुमान: अर्को 72 घण्टामा {rain_72h} मि.मी."
+  },
+  "river_high": {
+    "en": "River at {gauge} is {level} m (danger level {danger} m)",
+    "hi": "{gauge} पर नदी का स्तर {level} मीटर है (खतरे का स्तर {danger} मीटर)",
+    "ne": "{gauge} मा नदीको सतह {level} मिटर छ (खतराको सतह {danger} मिटर)"
+  },
+  "surge_upstream": {
+    "en": "Flood surge detected upstream at {gauge}",
+    "hi": "{gauge} पर ऊपर की ओर बाढ़ की लहर दर्ज",
+    "ne": "माथि {gauge} मा बाढीको छाल देखियो"
+  },
+  "glof_exposure": {
+    "en": "{km} km downstream of {lake}, a high-risk glacial lake",
+    "hi": "{lake} (उच्च जोखिम वाली हिमनद झील) से {km} किमी नीचे",
+    "ne": "{lake} (उच्च जोखिमयुक्त हिमताल) बाट {km} कि.मी. तल"
+  },
+  "landslide_slope": {
+    "en": "Steep slopes with a known landslide zone nearby",
+    "hi": "खड़ी ढलान और पास में भूस्खलन-संभावित क्षेत्र",
+    "ne": "भिरालो जमिन र नजिकै पहिरो जाने क्षेत्र"
+  },
+  "low_all": {
+    "en": "No major hazard signals right now",
+    "hi": "अभी कोई बड़ा खतरा संकेत नहीं",
+    "ne": "अहिले कुनै ठूलो खतराको संकेत छैन"
+  }
+}
