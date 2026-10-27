@@ -34,6 +34,10 @@ export default function Dashboard() {
     if (risk.data) setDisplayRisk(risk.data)
   }, [risk.data])
 
+  useEffect(() => {
+    document.documentElement.lang = 'en'
+  }, [])
+
   function openComposerForVillage(villageId: string) {
     setComposerVillageIds([villageId])
   }
