@@ -11,3 +11,6 @@ frontend/dist/
 *.log
 .vercel
 .env*
+.agents/
+.claude/
+skills-lock.json
