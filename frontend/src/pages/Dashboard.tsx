@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '../api/client'
+import ActivityFeed from '../components/ActivityFeed'
 import AlertComposer from '../components/AlertComposer'
+import DemoControls from '../components/DemoControls'
 import Header from '../components/Header'
 import KpiCards from '../components/KpiCards'
 import RiskMap from '../components/RiskMap'
 import Toast from '../components/Toast'
 import VillagePanel from '../components/VillagePanel'
 import { usePolling } from '../hooks/usePolling'
+import type { Risk } from '../api/types'
 
 type Tab = 'village' | 'alerts' | 'activity'
 
@@ -17,19 +20,26 @@ export default function Dashboard() {
   const risk = usePolling(api.risk, 15000)
   const stats = usePolling(api.stats, 15000)
   const alerts = usePolling(api.alerts, 5000)
+  const checkIns = usePolling(api.checkIns, 5000)
+  const incidents = usePolling(api.incidents, 5000)
 
   const [selectedVillageId, setSelectedVillageId] = useState<string | null>(null)
   const [showShelters, setShowShelters] = useState(false)
   const [tab, setTab] = useState<Tab>('village')
   const [composerVillageIds, setComposerVillageIds] = useState<string[] | null>(null)
   const [toast, setToast] = useState<{ message: string; kind: 'success' | 'error' } | null>(null)
+  const [displayRisk, setDisplayRisk] = useState<Risk[] | null>(null)
+
+  useEffect(() => {
+    if (risk.data) setDisplayRisk(risk.data)
+  }, [risk.data])
 
   function openComposerForVillage(villageId: string) {
     setComposerVillageIds([villageId])
   }
 
   function openComposerForHighSevere() {
-    const ids = (risk.data ?? []).filter((r) => r.level === 'High' || r.level === 'Severe').map((r) => r.village_id)
+    const ids = (displayRisk ?? []).filter((r) => r.level === 'High' || r.level === 'Severe').map((r) => r.village_id)
     setComposerVillageIds(ids)
   }
 
@@ -38,6 +48,26 @@ export default function Dashboard() {
     setToast({ message: `Alert sent to villages in 3 languages — reaches approx. ${recipients.toLocaleString('en-IN')} people`, kind: 'success' })
     alerts.refresh()
     stats.refresh()
+  }
+
+  function handleSurgeComplete(message: string, mostSevereVillageId: string | null) {
+    setToast({ message, kind: 'success' })
+    if (mostSevereVillageId) {
+      setSelectedVillageId(mostSevereVillageId)
+      setTab('village')
+    }
+    risk.refresh()
+    stats.refresh()
+  }
+
+  function handleReset() {
+    risk.refresh()
+    stats.refresh()
+    alerts.refresh()
+    checkIns.refresh()
+    incidents.refresh()
+    setSelectedVillageId(null)
+    setToast({ message: 'Demo reset', kind: 'success' })
   }
 
   return (
@@ -49,7 +79,7 @@ export default function Dashboard() {
             villages={villages.data ?? []}
             riskPoints={riskPoints.data ?? []}
             shelters={shelters.data ?? []}
-            risk={risk.data ?? []}
+            risk={displayRisk ?? risk.data ?? []}
             selectedVillageId={selectedVillageId}
             onSelectVillage={(id) => {
               setSelectedVillageId(id)
@@ -102,13 +132,22 @@ export default function Dashboard() {
               </ul>
             </div>
           )}
-          {tab === 'activity' && <p className="p-4 text-sm text-text-soft">Activity tab — coming next.</p>}
+          {tab === 'activity' && <ActivityFeed checkIns={checkIns.data ?? []} incidents={incidents.data ?? []} />}
+
+          <DemoControls
+            villages={villages.data ?? []}
+            currentRisk={risk.data ?? []}
+            onDisplayRiskChange={setDisplayRisk}
+            onSurgeComplete={handleSurgeComplete}
+            onReset={handleReset}
+            onError={(message) => setToast({ message, kind: 'error' })}
+          />
         </div>
       </div>
 
       {composerVillageIds && (
         <AlertComposer
-          risk={risk.data ?? []}
+          risk={displayRisk ?? risk.data ?? []}
           initialVillageIds={composerVillageIds}
           onClose={() => setComposerVillageIds(null)}
           onSent={handleSent}
