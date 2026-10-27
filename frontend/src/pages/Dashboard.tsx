@@ -3,6 +3,7 @@ import { api } from '../api/client'
 import ActivityFeed from '../components/ActivityFeed'
 import AlertComposer from '../components/AlertComposer'
 import DemoControls from '../components/DemoControls'
+import ErrorBanner from '../components/ErrorBanner'
 import Header from '../components/Header'
 import KpiCards from '../components/KpiCards'
 import RiskMap from '../components/RiskMap'
@@ -74,11 +75,13 @@ export default function Dashboard() {
     setToast({ message: 'Demo reset', kind: 'success' })
   }
 
+  const criticalError = villages.error ?? riskPoints.error ?? risk.error ?? stats.error
+
   return (
     <div className="flex h-screen flex-col bg-paper">
       <Header stats={stats.data} />
       <div className="flex flex-1 flex-col overflow-hidden lg:flex-row">
-        <div className="h-[60vh] w-full lg:h-full lg:w-[65%]">
+        <div className="h-[45vh] w-full shrink-0 sm:h-[55vh] lg:h-full lg:w-[65%]">
           <RiskMap
             villages={villages.data ?? []}
             riskPoints={riskPoints.data ?? []}
@@ -94,15 +97,29 @@ export default function Dashboard() {
           />
         </div>
         <div className="flex-1 overflow-y-auto border-l border-card-border bg-mist p-3 lg:w-[35%]">
+          {criticalError && (
+            <ErrorBanner
+              message={`Couldn't reach the backend: ${criticalError.message}`}
+              onRetry={() => {
+                villages.refresh()
+                riskPoints.refresh()
+                shelters.refresh()
+                risk.refresh()
+                stats.refresh()
+              }}
+            />
+          )}
           <KpiCards stats={stats.data} />
 
-          <div className="mt-3 flex gap-2 border-b border-card-border text-sm">
+          <div role="tablist" className="mt-3 flex gap-1 border-b border-card-border text-sm">
             {(['village', 'alerts', 'activity'] as Tab[]).map((t) => (
               <button
                 key={t}
                 type="button"
+                role="tab"
+                aria-selected={tab === t}
                 onClick={() => setTab(t)}
-                className={`px-3 py-1.5 capitalize ${tab === t ? 'border-b-2 border-teal font-semibold text-dark' : 'text-text-soft'}`}
+                className={`min-h-11 px-3 py-1.5 capitalize ${tab === t ? 'border-b-2 border-teal font-semibold text-dark' : 'text-text-soft hover:text-dark'}`}
               >
                 {t}
               </button>
@@ -117,23 +134,27 @@ export default function Dashboard() {
               <button
                 type="button"
                 onClick={openComposerForHighSevere}
-                className="mb-3 w-full rounded-lg bg-orange px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                className="mb-3 min-h-11 w-full rounded-lg bg-orange px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
               >
                 New alert
               </button>
-              <ul className="space-y-2 text-sm">
-                {(alerts.data ?? []).map((a) => (
-                  <li key={a.id} className="rounded-lg border border-card-border bg-white p-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium capitalize">{a.hazard}</span>
-                      <span className="text-xs text-text-soft">{new Date(a.created_at).toLocaleTimeString()}</span>
-                    </div>
-                    <div className="text-xs text-text-soft">
-                      {a.village_ids.length} village(s) · approx. {a.recipients_est.toLocaleString('en-IN')} people
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              {(alerts.data ?? []).length === 0 ? (
+                <p className="text-sm text-text-soft">No alerts sent yet.</p>
+              ) : (
+                <ul className="space-y-2 text-sm">
+                  {(alerts.data ?? []).map((a) => (
+                    <li key={a.id} className="rounded-lg border border-card-border bg-white p-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium capitalize">{a.hazard}</span>
+                        <span className="shrink-0 text-xs text-text-soft">{new Date(a.created_at).toLocaleTimeString()}</span>
+                      </div>
+                      <div className="text-xs text-text-soft">
+                        {a.village_ids.length} village(s) · approx. {a.recipients_est.toLocaleString('en-IN')} people
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
           {tab === 'activity' && <ActivityFeed checkIns={checkIns.data ?? []} incidents={incidents.data ?? []} />}

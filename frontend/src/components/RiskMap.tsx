@@ -132,6 +132,11 @@ export default function RiskMap({
         ))}
       </MapContainer>
       <Legend showShelters={showShelters} onToggleShelters={onToggleShelters} />
+      {villages.length === 0 && (
+        <div className="pointer-events-none absolute inset-0 z-[400] flex items-center justify-center bg-paper/60">
+          <span className="rounded-lg bg-white px-3 py-2 text-sm text-text-soft shadow">Loading villages…</span>
+        </div>
+      )}
     </div>
   )
 }

@@ -29,17 +29,31 @@ export default function AlertComposer({ risk, initialVillageIds, onClose, onSent
   const [hazard, setHazard] = useState<Hazard>('flood')
   const [langTab, setLangTab] = useState<'en' | 'hi' | 'ne'>('en')
   const [preview, setPreview] = useState<AlertPreview | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewError, setPreviewError] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ids = [...selected]
+    setPreviewError(null)
     if (ids.length === 0) {
       setPreview(null)
+      setPreviewLoading(false)
       return
     }
+    setPreviewLoading(true)
     const timer = setTimeout(() => {
-      api.alertPreview(ids, hazard).then(setPreview).catch(() => setPreview(null))
+      api.alertPreview(ids, hazard)
+        .then((p) => {
+          setPreview(p)
+          setPreviewError(null)
+        })
+        .catch((err) => {
+          setPreview(null)
+          setPreviewError(err instanceof ApiError ? err.message : 'Could not load preview')
+        })
+        .finally(() => setPreviewLoading(false))
     }, 300)
     return () => clearTimeout(timer)
   }, [selected, hazard])
@@ -88,7 +102,12 @@ export default function AlertComposer({ risk, initialVillageIds, onClose, onSent
   }
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 p-4">
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 p-4"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
       <div
         ref={dialogRef}
         role="dialog"
@@ -98,7 +117,12 @@ export default function AlertComposer({ risk, initialVillageIds, onClose, onSent
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-heading text-lg text-dark">New alert</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="text-text-soft hover:text-dark">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-text-soft hover:bg-mist hover:text-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+          >
             ✕
           </button>
         </div>
@@ -108,27 +132,35 @@ export default function AlertComposer({ risk, initialVillageIds, onClose, onSent
           id="hazard-select"
           value={hazard}
           onChange={(e) => setHazard(e.target.value as Hazard)}
-          className="mb-3 w-full rounded-lg border border-card-border p-2 text-sm"
+          className="mb-3 min-h-11 w-full rounded-lg border border-card-border p-2 text-sm"
         >
           {HAZARDS.map((h) => <option key={h.value} value={h.value}>{h.label}</option>)}
         </select>
 
-        <p className="mb-1 text-sm font-medium text-dark">Villages</p>
-        <div className="mb-3 max-h-40 overflow-y-auto rounded-lg border border-card-border p-2">
-          {sorted.map((r) => (
-            <label key={r.village_id} className="flex items-center justify-between gap-2 py-1 text-sm">
-              <span className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selected.has(r.village_id)}
-                  onChange={() => toggleVillage(r.village_id)}
-                />
-                {r.name}
-              </span>
-              <LevelBadge level={r.level} />
-            </label>
-          ))}
-        </div>
+        <p className="mb-1 text-sm font-medium text-dark">Villages ({selected.size} selected)</p>
+        {sorted.length === 0 ? (
+          <p className="mb-3 text-sm text-text-soft">No villages available.</p>
+        ) : (
+          <div className="mb-3 max-h-48 overflow-y-auto rounded-lg border border-card-border p-1 sm:max-h-56">
+            {sorted.map((r) => (
+              <label
+                key={r.village_id}
+                className="flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1 text-sm hover:bg-mist"
+              >
+                <span className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(r.village_id)}
+                    onChange={() => toggleVillage(r.village_id)}
+                    className="h-4 w-4"
+                  />
+                  {r.name}
+                </span>
+                <LevelBadge level={r.level} />
+              </label>
+            ))}
+          </div>
+        )}
 
         <div className="mb-2 flex gap-1 border-b border-card-border text-sm">
           {LANG_TABS.map((t) => (
@@ -136,22 +168,30 @@ export default function AlertComposer({ risk, initialVillageIds, onClose, onSent
               key={t.key}
               type="button"
               onClick={() => setLangTab(t.key)}
-              className={`px-2 py-1 ${langTab === t.key ? 'border-b-2 border-teal font-semibold text-dark' : 'text-text-soft'}`}
+              className={`min-h-11 px-2 py-1 ${langTab === t.key ? 'border-b-2 border-teal font-semibold text-dark' : 'text-text-soft hover:text-dark'}`}
             >
               {t.label}
             </button>
           ))}
         </div>
         <p className="mb-3 min-h-16 rounded-lg bg-mist p-2 text-sm" lang={langTab}>
-          {preview ? preview[langTab] : 'Select at least one village to preview the message.'}
+          {previewLoading
+            ? 'Loading preview…'
+            : previewError
+              ? previewError
+              : preview
+                ? preview[langTab]
+                : 'Select at least one village to preview the message.'}
         </p>
-        {preview && <p className="mb-3 text-xs text-text-soft">Reaches approx. {preview.recipients_est.toLocaleString('en-IN')} people</p>}
+        {preview && !previewLoading && (
+          <p className="mb-3 text-xs text-text-soft">Reaches approx. {preview.recipients_est.toLocaleString('en-IN')} people</p>
+        )}
 
         <button
           type="button"
           onClick={handleSend}
-          disabled={sending || selected.size === 0}
-          className="w-full rounded-lg bg-orange px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+          disabled={sending || selected.size === 0 || !!previewError}
+          className="min-h-11 w-full rounded-lg bg-orange px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
         >
           {sending ? 'Sending…' : 'Send alert'}
         </button>

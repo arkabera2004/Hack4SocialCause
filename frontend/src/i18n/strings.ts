@@ -29,6 +29,10 @@ export interface Strings {
   submit: string
   submitSuccess: string
   submitError: string
+  photoTooLarge: string
+  checkInError: string
+  loadError: string
+  retry: string
   emergency: string
   prototypeNotice: string
 }
@@ -62,6 +66,10 @@ export const strings: Record<Lang, Strings> = {
     submit: 'Submit',
     submitSuccess: 'Report sent. Thank you.',
     submitError: 'Could not send report. Please try again.',
+    photoTooLarge: 'Photo is too large. Please use a file under 5 MB.',
+    checkInError: 'Could not send. Please try again.',
+    loadError: 'Could not load data.',
+    retry: 'Retry',
     emergency: 'Emergency: 112',
     prototypeNotice: 'Prototype · sample data',
   },
@@ -93,6 +101,10 @@ export const strings: Record<Lang, Strings> = {
     submit: 'जमा करें',
     submitSuccess: 'रिपोर्ट भेज दी गई। धन्यवाद।',
     submitError: 'रिपोर्ट नहीं भेजी जा सकी। फिर से कोशिश करें।',
+    photoTooLarge: 'फ़ोटो बहुत बड़ी है। कृपया 5 MB से छोटी फ़ाइल चुनें।',
+    checkInError: 'भेजा नहीं जा सका। फिर से कोशिश करें।',
+    loadError: 'डेटा लोड नहीं हो सका।',
+    retry: 'फिर से कोशिश करें',
     emergency: 'आपातकालीन: 112',
     prototypeNotice: 'प्रोटोटाइप · नमूना डेटा',
   },
@@ -124,6 +136,10 @@ export const strings: Record<Lang, Strings> = {
     submit: 'पेश गर्नुहोस्',
     submitSuccess: 'रिपोर्ट पठाइयो। धन्यवाद।',
     submitError: 'रिपोर्ट पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।',
+    photoTooLarge: 'फोटो धेरै ठूलो छ। कृपया 5 MB भन्दा सानो फाइल प्रयोग गर्नुहोस्।',
+    checkInError: 'पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।',
+    loadError: 'डेटा लोड हुन सकेन।',
+    retry: 'फेरि प्रयास गर्नुहोस्',
     emergency: 'आपतकालीन: 112',
     prototypeNotice: 'प्रोटोटाइप · नमूना डेटा',
   },

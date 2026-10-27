@@ -27,14 +27,20 @@ export default function Citizen() {
   const [incidentDesc, setIncidentDesc] = useState('')
   const [incidentPhoto, setIncidentPhoto] = useState<File | null>(null)
   const [incidentStatus, setIncidentStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [photoError, setPhotoError] = useState(false)
+  const [checkInError, setCheckInError] = useState(false)
+  const [villagesError, setVillagesError] = useState(false)
+  const [riskError, setRiskError] = useState(false)
+  const [reloadToken, setReloadToken] = useState(0)
 
   useEffect(() => {
     document.documentElement.lang = lang
   }, [lang])
 
   useEffect(() => {
-    api.villages().then(setVillages)
-  }, [])
+    setVillagesError(false)
+    api.villages().then(setVillages).catch(() => setVillagesError(true))
+  }, [reloadToken])
 
   useEffect(() => {
     let stored: string | null = null
@@ -82,12 +88,13 @@ export default function Citizen() {
 
   useEffect(() => {
     if (!location) return
+    setRiskError(false)
     if (location.kind === 'gps') {
-      api.riskAt(location.lat, location.lng).then(setRisk)
+      api.riskAt(location.lat, location.lng).then(setRisk).catch(() => setRiskError(true))
     } else {
       const village = villages.find((v) => v.id === location.villageId)
       if (village) {
-        api.riskAt(village.lat, village.lng).then(setRisk)
+        api.riskAt(village.lat, village.lng).then(setRisk).catch(() => setRiskError(true))
       }
     }
   }, [location, villages])
@@ -110,11 +117,12 @@ export default function Citizen() {
   async function submitCheckIn(status: 'safe' | 'need_help') {
     if (!risk || submittingCheckIn) return
     setSubmittingCheckIn(true)
+    setCheckInError(false)
     try {
       await api.createCheckIn(status, risk.lat, risk.lng)
       setCheckInDone(status)
     } catch {
-      // keep the buttons available to retry
+      setCheckInError(true)
     } finally {
       setSubmittingCheckIn(false)
     }
@@ -186,13 +194,39 @@ export default function Citizen() {
           <label htmlFor="village-select" className="mb-1 block text-sm font-medium">{t.chooseVillage}</label>
           <select
             id="village-select"
-            className="min-h-12 w-full rounded-lg border border-card-border p-2"
+            className="min-h-12 w-full rounded-lg border border-card-border p-2 disabled:opacity-50"
             defaultValue=""
+            disabled={villagesError || villages.length === 0}
             onChange={(e) => e.target.value && chooseVillage(e.target.value)}
           >
             <option value="" disabled>{t.chooseVillage}</option>
             {villages.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
           </select>
+          {villagesError && (
+            <div className="mt-2 flex items-center justify-between gap-2 text-sm text-level-severe">
+              <span>{t.loadError}</span>
+              <button
+                type="button"
+                onClick={() => setReloadToken((n) => n + 1)}
+                className="min-h-11 rounded-lg border border-level-severe/40 px-2 text-xs font-medium"
+              >
+                {t.retry}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {riskError && (
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-level-severe/30 bg-level-severe/10 p-3 text-sm text-level-severe">
+          <span>{t.loadError}</span>
+          <button
+            type="button"
+            onClick={() => setLocation((loc) => (loc ? { ...loc } : loc))}
+            className="min-h-11 rounded-lg border border-level-severe/40 px-2 text-xs font-medium"
+          >
+            {t.retry}
+          </button>
         </div>
       )}
 
@@ -222,23 +256,26 @@ export default function Citizen() {
           </button>
         </div>
       ) : (
-        <div className="mb-3 grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            disabled={!risk || submittingCheckIn}
-            onClick={() => submitCheckIn('safe')}
-            className="min-h-12 rounded-xl bg-level-low px-4 py-3 font-semibold text-white disabled:opacity-50"
-          >
-            {t.imSafe}
-          </button>
-          <button
-            type="button"
-            disabled={!risk || submittingCheckIn}
-            onClick={() => submitCheckIn('need_help')}
-            className="min-h-12 rounded-xl bg-level-severe px-4 py-3 font-semibold text-white disabled:opacity-50"
-          >
-            {t.needHelp}
-          </button>
+        <div className="mb-3">
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              disabled={!risk || submittingCheckIn}
+              onClick={() => submitCheckIn('safe')}
+              className="min-h-12 rounded-xl bg-level-low px-4 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+            >
+              {submittingCheckIn ? '…' : t.imSafe}
+            </button>
+            <button
+              type="button"
+              disabled={!risk || submittingCheckIn}
+              onClick={() => submitCheckIn('need_help')}
+              className="min-h-12 rounded-xl bg-level-severe px-4 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+            >
+              {submittingCheckIn ? '…' : t.needHelp}
+            </button>
+          </div>
+          {checkInError && <p className="mt-2 text-center text-sm text-level-severe">{t.checkInError}</p>}
         </div>
       )}
 
@@ -287,20 +324,24 @@ export default function Citizen() {
             onChange={(e) => {
               const file = e.target.files?.[0] ?? null
               if (file && file.size > 5 * 1024 * 1024) {
-                setIncidentStatus('error')
+                setPhotoError(true)
+                e.target.value = ''
+                setIncidentPhoto(null)
                 return
               }
+              setPhotoError(false)
               setIncidentPhoto(file)
             }}
             className="mb-2 w-full"
           />
+          {photoError && <p className="mb-2 text-sm text-level-severe">{t.photoTooLarge}</p>}
 
           <button
             type="submit"
             disabled={incidentStatus === 'sending' || !risk}
-            className="min-h-12 w-full rounded-lg bg-orange px-4 text-white disabled:opacity-50"
+            className="min-h-12 w-full rounded-lg bg-orange px-4 text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
           >
-            {t.submit}
+            {incidentStatus === 'sending' ? '…' : t.submit}
           </button>
           {incidentStatus === 'success' && <p className="mt-2 text-sm text-level-low">{t.submitSuccess}</p>}
           {incidentStatus === 'error' && <p className="mt-2 text-sm text-level-severe">{t.submitError}</p>}
@@ -317,9 +358,24 @@ export default function Citizen() {
 
 function ShelterList({ lat, lng, t }: { lat: number; lng: number; t: typeof strings['en'] }) {
   const [shelters, setShelters] = useState<Awaited<ReturnType<typeof api.nearestShelters>>>([])
+  const [error, setError] = useState(false)
+
   useEffect(() => {
-    api.nearestShelters(lat, lng, 3).then(setShelters)
+    setError(false)
+    api.nearestShelters(lat, lng, 3).then(setShelters).catch(() => setError(true))
   }, [lat, lng])
+
+  if (error) {
+    return <p className="text-sm text-level-severe">{t.loadError}</p>
+  }
+
+  if (shelters.length === 0) {
+    return (
+      <div className="space-y-2" aria-hidden>
+        {[0, 1, 2].map((i) => <div key={i} className="h-20 animate-pulse rounded-xl bg-card-border/40" />)}
+      </div>
+    )
+  }
 
   return (
     <>

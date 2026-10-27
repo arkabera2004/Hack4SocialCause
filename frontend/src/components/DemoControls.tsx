@@ -83,7 +83,8 @@ export default function DemoControls({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full px-3 py-2 text-left text-sm font-semibold text-dark"
+        aria-expanded={open}
+        className="min-h-11 w-full px-3 py-2 text-left text-sm font-semibold text-dark"
       >
         Demo controls {open ? '▾' : '▸'}
       </button>
@@ -94,7 +95,8 @@ export default function DemoControls({
             id="gauge-select"
             value={gaugeId}
             onChange={(e) => handleGaugeChange(e.target.value)}
-            className="w-full rounded-lg border border-card-border p-1.5"
+            disabled={busy}
+            className="min-h-11 w-full rounded-lg border border-card-border p-1.5 disabled:opacity-50"
           >
             {GAUGES.map((g) => <option key={g.id} value={g.id}>{g.label}</option>)}
           </select>
@@ -110,23 +112,24 @@ export default function DemoControls({
             step={0.1}
             value={levelM}
             onChange={(e) => setLevelM(Number(e.target.value))}
-            className="w-full"
+            disabled={busy}
+            className="h-11 w-full disabled:opacity-50"
           />
 
-          <div className="flex gap-2 pt-1">
+          <div className="flex flex-wrap gap-2 pt-1">
             <button
               type="button"
               onClick={simulateSurge}
-              disabled={busy}
-              className="flex-1 rounded-lg bg-orange px-3 py-1.5 text-white disabled:opacity-50"
+              disabled={busy || villages.length === 0}
+              className="min-h-11 flex-1 rounded-lg bg-orange px-3 py-1.5 text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
             >
-              Simulate surge
+              {busy ? 'Working…' : 'Simulate surge'}
             </button>
             <button
               type="button"
               onClick={resetDemo}
               disabled={busy}
-              className="flex-1 rounded-lg border border-card-border px-3 py-1.5 text-dark disabled:opacity-50"
+              className="min-h-11 flex-1 rounded-lg border border-card-border px-3 py-1.5 text-dark hover:bg-mist disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
             >
               Reset demo
             </button>
