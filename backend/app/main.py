@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.db import Base, SessionLocal, engine
-from app.routers import alerts, citizen, risk, villages
+from app.routers import admin, alerts, citizen, risk, stats, villages
 from app.seed import seed_if_empty
 
 VERSION = "0.1.0"
@@ -42,6 +42,8 @@ app.include_router(villages.router, prefix="/api")
 app.include_router(risk.router, prefix="/api")
 app.include_router(alerts.router, prefix="/api")
 app.include_router(citizen.router, prefix="/api")
+app.include_router(admin.router, prefix="/api")
+app.include_router(stats.router, prefix="/api")
 
 
 @app.get("/api/health", tags=["stats"])
